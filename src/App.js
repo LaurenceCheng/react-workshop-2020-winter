@@ -12,12 +12,6 @@ class App extends Component {
     statusToShow: "All",
   };
 
-  componentDidMount() {
-    fetch("https://run.mocky.io/v3/adc0e655-b26f-4738-a0d8-9cc976a8fa36")
-      .then((response) => response.json())
-      .then((data) => this.setState({ allData: data, displayedData: data }));
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (
       prevState.statusToShow !== this.state.statusToShow ||
