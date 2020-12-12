@@ -6,9 +6,17 @@ import RingTable from "./RingTable";
 
 class App extends Component {
   state = {
+    allData: [],
+    displayedData: [],
     operation: "",
     statusToShow: "",
   };
+
+  componentDidMount() {
+    fetch("https://run.mocky.io/v3/adc0e655-b26f-4738-a0d8-9cc976a8fa36")
+      .then((response) => response.json())
+      .then((data) => this.setState({ allData: data, displayedData: data }));
+  }
 
   render() {
     return (
@@ -33,7 +41,7 @@ class App extends Component {
           onSelect={(status) => this.setState({ statusToShow: status })}
           selected={this.state.statusToShow}
         />
-        <RingTable />
+        <RingTable rows={this.state.displayedData} />
       </>
     );
   }

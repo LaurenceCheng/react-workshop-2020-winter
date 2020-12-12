@@ -1,6 +1,6 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
-import Badge from "react-bootstrap/Badge"
+import Badge from "react-bootstrap/Badge";
 
 const getBadgeVariant = (status) => {
   switch (status) {
@@ -21,7 +21,7 @@ const getBadgeVariant = (status) => {
   }
 };
 
-const RingTable = () => (
+const RingTable = ({ rows }) => (
   <Table bordered>
     <thead>
       <tr>
@@ -33,13 +33,17 @@ const RingTable = () => (
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>GIS</td>
-        <td><Badge variant={getBadgeVariant('Complete')}>Complete</Badge></td>
-        <td>20.0.0-211</td>
-        <td>20.0.0-211</td>
-        <td>20.0.0-211</td>
-      </tr>
+      {rows.map((row, index) => (
+        <tr key={`ring-row${index}`}>
+          <td>{row.target}</td>
+          <td>
+            <Badge variant={getBadgeVariant(row.status)}>{row.status}</Badge>
+          </td>
+          <td>{row.windows}</td>
+          <td>{row.linux}</td>
+          <td>{row.unix}</td>
+        </tr>
+      ))}
     </tbody>
   </Table>
 );
