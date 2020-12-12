@@ -5,6 +5,10 @@ import SelectionRadios from "./SelectionRadios";
 import RingTable from "./RingTable";
 
 class App extends Component {
+  state = {
+    operation: "",
+  };
+
   render() {
     return (
       <>
@@ -13,7 +17,9 @@ class App extends Component {
           links={["Home", "Feeds"]}
           theme="dark"
         />
-        <OperationButtons />
+        <OperationButtons
+          onClick={(action) => this.setState({ operation: action })}
+        />
         <SelectionRadios
           radiosText={[
             "Complete",
