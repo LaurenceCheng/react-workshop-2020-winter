@@ -1,7 +1,9 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
+import { connect } from "react-redux";
+import { selectStatus } from "./redux/modules/statusSelection";
 
-const SelectionRadios = ({ radiosText, selected, onSelect }) => (
+const SelectionRadios = ({ radiosText, selected, onStatusSelected }) => (
   <Form>
     <div style={{ margin: "12px" }}>
       {radiosText.map((text) => (
@@ -11,7 +13,7 @@ const SelectionRadios = ({ radiosText, selected, onSelect }) => (
           value={text}
           type="radio"
           key={`selection-radio-${text}`}
-          onChange={(e) => onSelect(e.target.value)}
+          onChange={(e) => onStatusSelected(e.target.value)}
           checked={selected === text}
         />
       ))}
@@ -19,4 +21,8 @@ const SelectionRadios = ({ radiosText, selected, onSelect }) => (
   </Form>
 );
 
-export default SelectionRadios;
+const mapDispatchToProps = (dispatch) => ({
+  onStatusSelected: (status) => dispatch(selectStatus(status)),
+});
+
+export default connect(null, mapDispatchToProps)(SelectionRadios);
