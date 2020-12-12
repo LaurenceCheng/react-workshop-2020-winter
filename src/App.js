@@ -9,7 +9,7 @@ class App extends Component {
     allData: [],
     displayedData: [],
     operation: "",
-    statusToShow: "",
+    statusToShow: "All",
   };
 
   componentDidMount() {
@@ -19,7 +19,10 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.statusToShow !== this.state.statusToShow) {
+    if (
+      prevState.statusToShow !== this.state.statusToShow ||
+      prevState.allData !== this.state.allData
+    ) {
       let filteredData = [];
       if (this.state.statusToShow === "All") {
         filteredData = this.state.allData;
@@ -29,6 +32,30 @@ class App extends Component {
         );
       }
       this.setState({ displayedData: filteredData });
+    }
+
+    if (prevState.operation !== this.state.operation) {
+      let changedData = this.state.allData;
+      if (this.state.operation === "start") {
+        changedData = changedData.map((data) => ({
+          ...data,
+          status: data.status === "Paused" ? "Ongoing" : data.status,
+        }));
+      } else if (this.state.operation === "pause") {
+        changedData = changedData.map((data) => ({
+          ...data,
+          status: data.status === "Ongoing" ? "Paused" : data.status,
+        }));
+      } else if (this.state.operation === "abort") {
+        changedData = changedData.map((data) => ({
+          ...data,
+          status:
+            data.status === "Paused" || data.status === "Ongoing"
+              ? "Aborted"
+              : data.status,
+        }));
+      }
+      this.setState({ allData: changedData });
     }
   }
   render() {
