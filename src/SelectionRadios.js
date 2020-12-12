@@ -1,16 +1,7 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 
-const radiosText = [
-  "Complete",
-  "Ongoing",
-  "Paused",
-  "Failed",
-  "Aborted",
-  "All",
-];
-
-const SelectionRadios = () => (
+const SelectionRadios = ({ radiosText }) => (
   <Form>
     <div style={{ margin: "12px" }}>
       {radiosText.map((text) => (

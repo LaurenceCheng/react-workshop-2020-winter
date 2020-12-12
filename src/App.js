@@ -14,7 +14,16 @@ class App extends Component {
           theme="dark"
         />
         <OperationButtons />
-        <SelectionRadios />
+        <SelectionRadios
+          radiosText={[
+            "Complete",
+            "Ongoing",
+            "Paused",
+            "Failed",
+            "Aborted",
+            "All",
+          ]}
+        />
         <RingTable />
       </>
     );
