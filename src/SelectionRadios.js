@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 
-const SelectionRadios = ({ radiosText }) => (
+const SelectionRadios = ({ radiosText, selected, onSelect }) => (
   <Form>
     <div style={{ margin: "12px" }}>
       {radiosText.map((text) => (
@@ -11,6 +11,8 @@ const SelectionRadios = ({ radiosText }) => (
           value={text}
           type="radio"
           key={`selection-radio-${text}`}
+          onChange={(e) => onSelect(e.target.value)}
+          checked={selected === text}
         />
       ))}
     </div>

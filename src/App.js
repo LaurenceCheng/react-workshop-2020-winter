@@ -7,6 +7,7 @@ import RingTable from "./RingTable";
 class App extends Component {
   state = {
     operation: "",
+    statusToShow: "",
   };
 
   render() {
@@ -29,6 +30,8 @@ class App extends Component {
             "Aborted",
             "All",
           ]}
+          onSelect={(status) => this.setState({ statusToShow: status })}
+          selected={this.state.statusToShow}
         />
         <RingTable />
       </>
