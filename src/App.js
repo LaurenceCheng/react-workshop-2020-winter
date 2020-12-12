@@ -18,6 +18,19 @@ class App extends Component {
       .then((data) => this.setState({ allData: data, displayedData: data }));
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.statusToShow !== this.state.statusToShow) {
+      let filteredData = [];
+      if (this.state.statusToShow === "All") {
+        filteredData = this.state.allData;
+      } else {
+        filteredData = this.state.allData.filter(
+          (data) => data.status === this.state.statusToShow
+        );
+      }
+      this.setState({ displayedData: filteredData });
+    }
+  }
   render() {
     return (
       <>
