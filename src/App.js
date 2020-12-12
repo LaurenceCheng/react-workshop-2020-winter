@@ -8,7 +8,11 @@ class App extends Component {
   render() {
     return (
       <>
-        <Header />
+        <Header
+          brand="React Workshop Lab"
+          links={["Home", "Feeds"]}
+          theme="dark"
+        />
         <OperationButtons />
         <SelectionRadios />
         <RingTable />

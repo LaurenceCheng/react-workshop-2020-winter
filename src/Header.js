@@ -2,12 +2,13 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 
-const Header = () => (
-  <Navbar fixed="top" bg="dark" variant="dark">
-    <Navbar.Brand>React Workshop Lab</Navbar.Brand>
+const Header = ({ brand, links, theme }) => (
+  <Navbar fixed="top" bg={theme} variant={theme}>
+    <Navbar.Brand>{brand}</Navbar.Brand>
     <Nav className="mr-auto">
-      <Nav.Link href="#home">Home</Nav.Link>
-      <Nav.Link href="#feeds">Feeds</Nav.Link>
+      {links.map((link) => (
+        <Nav.Link href={`#${link}`}>{link}</Nav.Link>
+      ))}
     </Nav>
   </Navbar>
 );
