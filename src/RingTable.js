@@ -23,13 +23,57 @@ const getBadgeVariant = (status) => {
   }
 };
 
+const operationTransition = {
+  start: "Ongoing",
+  pause: "Paused",
+  abort: "Aborted",
+};
+
 class RingTable extends Component {
-  state = { allData: [], displayedData: [] };
+  state = {
+    allData: [],
+    displayedData: [],
+  };
 
   componentDidMount() {
     fetch("https://run.mocky.io/v3/adc0e655-b26f-4738-a0d8-9cc976a8fa36")
       .then((response) => response.json())
-      .then((data) => this.setState({ allData: data, displayedData: data }));
+      .then((data) => this.props.setRings(data));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.rings !== this.props.rings) {
+      this.setState({
+        allData: this.props.rings,
+        displayedData: this.props.rings,
+      });
+    }
+
+    if (
+      prevProps.statusToShow !== this.props.statusToShow ||
+      prevState.allData !== this.state.allData
+    ) {
+      const filteredData =
+        this.props.statusToShow === "All"
+          ? this.state.allData
+          : this.state.allData.filter(
+              (data) => data.status === this.props.statusToShow
+            );
+
+      this.setState({ displayedData: filteredData });
+    }
+
+    if (prevProps.rolloutOperation !== this.props.rolloutOperation) {
+      const changedData = this.state.allData.map((data) => ({
+        ...data,
+        status:
+          data.status === "Paused" || data.status === "Ongoing"
+            ? operationTransition[this.props.rolloutOperation]
+            : data.status,
+      }));
+
+      this.setState({ allData: changedData });
+    }
   }
 
   render() {
@@ -46,7 +90,7 @@ class RingTable extends Component {
         </thead>
         <tbody>
           {this.state.displayedData.map((row, index) => (
-            <tr key={`ring-row${index}`}>
+            <tr key={`ring-row-${index}`}>
               <td>{row.target}</td>
               <td>
                 <Badge variant={getBadgeVariant(row.status)}>
@@ -64,8 +108,14 @@ class RingTable extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  rings: state.rings.rings,
+  statusToShow: state.statusSelection.status,
+  rolloutOperation: state.rolloutOperation.operation,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   setRings: (data) => dispatch(setRings(data)),
 });
 
-export default connect(null, mapDispatchToProps)(RingTable);
+export default connect(mapStateToProps, mapDispatchToProps)(RingTable);

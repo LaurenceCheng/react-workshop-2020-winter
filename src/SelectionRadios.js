@@ -21,8 +21,12 @@ const SelectionRadios = ({ radiosText, selected, onStatusSelected }) => (
   </Form>
 );
 
+const mapStateToProps = (state) => ({
+  selected: state.statusSelection.status,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   onStatusSelected: (status) => dispatch(selectStatus(status)),
 });
 
-export default connect(null, mapDispatchToProps)(SelectionRadios);
+export default connect(mapStateToProps, mapDispatchToProps)(SelectionRadios);
