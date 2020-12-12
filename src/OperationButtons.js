@@ -1,19 +1,34 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
+import { connect } from "react-redux";
+import { executeOperation } from "./redux/modules/rolloutOperation";
 import "./OperationButtons.css";
 
-const OperationButtons = ({ onClick }) => (
+const OperationButtons = ({ onOperationExecuted }) => (
   <div className="operation-buttons">
-    <Button variant="outline-primary" onClick={() => onClick("start")}>
+    <Button
+      variant="outline-primary"
+      onClick={() => onOperationExecuted("start")}
+    >
       Start
     </Button>
-    <Button variant="outline-secondary" onClick={() => onClick("pause")}>
+    <Button
+      variant="outline-secondary"
+      onClick={() => onOperationExecuted("pause")}
+    >
       Pause
     </Button>
-    <Button variant="outline-danger" onClick={() => onClick("abort")}>
+    <Button
+      variant="outline-danger"
+      onClick={() => onOperationExecuted("abort")}
+    >
       Abort
     </Button>
   </div>
 );
 
-export default OperationButtons;
+const mapDispatchToProps = (dispatch) => ({
+  onOperationExecuted: (operation) => dispatch(executeOperation(operation)),
+});
+
+export default connect(null, mapDispatchToProps)(OperationButtons);
