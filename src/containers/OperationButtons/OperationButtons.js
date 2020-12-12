@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
-import { executeOperation } from "./redux/modules/rolloutOperation";
+import { executeOperation } from "../../redux/modules/rolloutOperation";
 import "./OperationButtons.css";
 
 const OperationButtons = ({ onOperationExecuted }) => (

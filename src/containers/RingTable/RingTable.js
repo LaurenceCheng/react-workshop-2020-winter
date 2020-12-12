@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
 import { connect } from "react-redux";
-import { setRings } from "./redux/modules/rings";
+import { setRings } from "../../redux/modules/rings";
 
 const getBadgeVariant = (status) => {
   switch (status) {

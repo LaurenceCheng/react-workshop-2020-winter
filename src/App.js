@@ -1,8 +1,8 @@
 import { Component } from "react";
-import Header from "./Header";
-import OperationButtons from "./OperationButtons";
-import SelectionRadios from "./SelectionRadios";
-import RingTable from "./RingTable";
+import Header from "./components/Header/Header";
+import OperationButtons from "./containers/OperationButtons/OperationButtons";
+import SelectionRadios from "./containers/SelectionRadios/SelectionRadios";
+import RingTable from "./containers/RingTable/RingTable";
 
 class App extends Component {
   render() {
