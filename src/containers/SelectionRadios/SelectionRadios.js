@@ -1,32 +1,29 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectStatus } from "../../redux/modules/statusSelection";
 
-const SelectionRadios = ({ radiosText, selected, onStatusSelected }) => (
-  <Form>
-    <div style={{ margin: "12px" }}>
-      {radiosText.map((text) => (
-        <Form.Check
-          inline
-          label={text}
-          value={text}
-          type="radio"
-          key={`selection-radio-${text}`}
-          onChange={(e) => onStatusSelected(e.target.value)}
-          checked={selected === text}
-        />
-      ))}
-    </div>
-  </Form>
-);
+const SelectionRadios = ({ radiosText }) => {
+  const selected = useSelector((state) => state.statusSelection.status);
+  const dispatch = useDispatch();
 
-const mapStateToProps = (state) => ({
-  selected: state.statusSelection.status,
-});
+  return (
+    <Form>
+      <div style={{ margin: "12px" }}>
+        {radiosText.map((text) => (
+          <Form.Check
+            inline
+            label={text}
+            value={text}
+            type="radio"
+            key={`selection-radio-${text}`}
+            onChange={(e) => dispatch(selectStatus(e.target.value))}
+            checked={selected === text}
+          />
+        ))}
+      </div>
+    </Form>
+  );
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  onStatusSelected: (status) => dispatch(selectStatus(status)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SelectionRadios);
+export default SelectionRadios;
