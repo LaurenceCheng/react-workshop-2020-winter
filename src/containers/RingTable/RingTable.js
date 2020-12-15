@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setRings } from "../../redux/modules/rings";
 
 const getBadgeVariant = (status) => {
@@ -29,93 +29,75 @@ const operationTransition = {
   abort: "Aborted",
 };
 
-class RingTable extends Component {
-  state = {
-    allData: [],
-    displayedData: [],
-  };
+const RingTable = () => {
+  const dispatch = useDispatch();
+  const rings = useSelector((state) => state.rings.rings);
+  const statusToShow = useSelector((state) => state.statusSelection.status);
+  const rolloutOperation = useSelector(
+    (state) => state.rolloutOperation.operation
+  );
 
-  componentDidMount() {
+  const [allData, setAllData] = useState([]);
+  const [displayedData, setDisplayedData] = useState([]);
+
+  useEffect(() => {
     fetch("https://run.mocky.io/v3/adc0e655-b26f-4738-a0d8-9cc976a8fa36")
       .then((response) => response.json())
-      .then((data) => this.props.setRings(data));
-  }
+      .then((data) => dispatch(setRings(data)));
+  }, []);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.rings !== this.props.rings) {
-      this.setState({
-        allData: this.props.rings,
-        displayedData: this.props.rings,
-      });
-    }
+  useEffect(() => {
+    setAllData(rings);
+    setDisplayedData(rings);
+  }, [rings]);
 
-    if (
-      prevProps.statusToShow !== this.props.statusToShow ||
-      prevState.allData !== this.state.allData
-    ) {
-      const filteredData =
-        this.props.statusToShow === "All"
-          ? this.state.allData
-          : this.state.allData.filter(
-              (data) => data.status === this.props.statusToShow
-            );
+  useEffect(() => {
+    const filteredData =
+      statusToShow === "All"
+        ? allData
+        : allData.filter((data) => data.status === statusToShow);
 
-      this.setState({ displayedData: filteredData });
-    }
+    setDisplayedData(filteredData);
+  }, [statusToShow, allData]);
 
-    if (prevProps.rolloutOperation !== this.props.rolloutOperation) {
-      const changedData = this.state.allData.map((data) => ({
-        ...data,
-        status:
-          data.status === "Paused" || data.status === "Ongoing"
-            ? operationTransition[this.props.rolloutOperation]
-            : data.status,
-      }));
+  useEffect(() => {
+    const changedData = allData.map((data) => ({
+      ...data,
+      status:
+        data.status === "Paused" || data.status === "Ongoing"
+          ? operationTransition[rolloutOperation]
+          : data.status,
+    }));
 
-      this.setState({ allData: changedData });
-    }
-  }
+    setAllData(changedData);
+  }, [rolloutOperation]);
 
-  render() {
-    return (
-      <Table bordered>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Rollout Status</th>
-            <th>Windows</th>
-            <th>Linux</th>
-            <th>Unix</th>
+  return (
+    <Table bordered>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Rollout Status</th>
+          <th>Windows</th>
+          <th>Linux</th>
+          <th>Unix</th>
+        </tr>
+      </thead>
+      <tbody>
+        {displayedData.map((row, index) => (
+          <tr key={`ring-row-${index}`}>
+            <td>{row.target}</td>
+            <td>
+              <Badge variant={getBadgeVariant(row.status)}>{row.status}</Badge>
+            </td>
+            <td>{row.windows}</td>
+            <td>{row.linux}</td>
+            <td>{row.unix}</td>
           </tr>
-        </thead>
-        <tbody>
-          {this.state.displayedData.map((row, index) => (
-            <tr key={`ring-row-${index}`}>
-              <td>{row.target}</td>
-              <td>
-                <Badge variant={getBadgeVariant(row.status)}>
-                  {row.status}
-                </Badge>
-              </td>
-              <td>{row.windows}</td>
-              <td>{row.linux}</td>
-              <td>{row.unix}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    );
-  }
-}
+        ))}
+      </tbody>
+    </Table>
+  );
+};
 
-const mapStateToProps = (state) => ({
-  rings: state.rings.rings,
-  statusToShow: state.statusSelection.status,
-  rolloutOperation: state.rolloutOperation.operation,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setRings: (data) => dispatch(setRings(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(RingTable);
+export default RingTable;
